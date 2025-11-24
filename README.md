@@ -1,4 +1,4 @@
-# Frontend Enhancement Toolkit
+# Recursive Codex
 
 [![CI](https://img.shields.io/badge/ci-manual-lightgrey)](../../actions/workflows/ci.yml)
 [![License: MIT](https://img.shields.io/badge/license-MIT-green)](LICENSE)

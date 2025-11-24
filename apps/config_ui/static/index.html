@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Config Control</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+  <main class="page">
+    <header class="page-header">
+      <div>
+        <h1>Config Control</h1>
+        <p>Edit Codex environment variables and CLI defaults.</p>
+      </div>
+      <div class="actions">
+        <button type="button" id="save-button">Save</button>
+      </div>
+    </header>
+    <div class="status-bar">
+      <div id="status">Loading…</div>
+      <div id="message"></div>
+    </div>
+    <form id="config-form">
+      <section class="card">
+        <div class="card-header">
+          <h2>Prompts</h2>
+        </div>
+        <div class="grid two-col">
+          <div class="field full" data-field="CODEX_INSTRUCTION_PREFIX" data-target="env">
+            <label for="field-CODEX_INSTRUCTION_PREFIX">Codex Instruction Prefix</label>
+            <p class="hint">Instruction prepended to every Codex run.</p>
+            <textarea id="field-CODEX_INSTRUCTION_PREFIX"></textarea>
+          </div>
+          <div class="field full" data-field="UI_FEEDBACK_PROMPT" data-target="env">
+            <label for="field-UI_FEEDBACK_PROMPT">Feedback Prompt</label>
+            <p class="hint">System prompt for the OpenAI API call that generates feedback based on the screenshot</p>
+            <textarea id="field-UI_FEEDBACK_PROMPT"></textarea>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <h2>Primary Settings</h2>
+        </div>
+        <div class="grid">
+          <div class="field" data-field="FRONTEND_ENHANCEMENT_CODEX_BIN" data-target="env">
+            <label for="field-FRONTEND_ENHANCEMENT_CODEX_BIN">Codex Binary</label>
+            <input type="text" id="field-FRONTEND_ENHANCEMENT_CODEX_BIN">
+          </div>
+          <div class="field" data-field="UI_FEEDBACK_MODEL_NAME" data-target="env">
+            <label for="field-UI_FEEDBACK_MODEL_NAME">Feedback Model</label>
+            <select id="field-UI_FEEDBACK_MODEL_NAME">
+              <option value="">Select…</option>
+              <option value="gpt-4o-mini">gpt-4o-mini</option>
+              <option value="gpt-4o">gpt-4o</option>
+              <option value="gpt-4.1-mini">gpt-4.1-mini</option>
+              <option value="gpt-4.1">gpt-4.1</option>
+              <option value="gpt-5.1">gpt-5.1</option>
+            </select>
+          </div>
+          <div class="field" data-field="UI_FEEDBACK_SCHEMA_PATH" data-target="env">
+            <label for="field-UI_FEEDBACK_SCHEMA_PATH">Schema Path</label>
+            <input type="text" id="field-UI_FEEDBACK_SCHEMA_PATH">
+          </div>
+          <div class="field" data-field="model" data-target="cli">
+            <label for="field-model">Codex Model</label>
+            <select id="field-model">
+              <option value="">Use Codex default</option>
+              <option value="gpt-5.1-codex-max">GPT-5.1-Codex-Max</option>
+              <option value="gpt-5.1-codex">GPT-5.1-Codex</option>
+              <option value="gpt-5.1">GPT-5.1</option>
+              <option value="gpt-5.1-codex-mini">GPT-5.1-Codex-Mini</option>
+            </select>
+          </div>
+          <div class="field" data-field="model_reasoning_effort" data-target="cli">
+            <label for="field-model_reasoning_effort">Reasoning Effort</label>
+            <select id="field-model_reasoning_effort">
+              <option value="">Auto</option>
+              <option value="low">Low</option>
+              <option value="medium">Medium</option>
+              <option value="high">High</option>
+            </select>
+          </div>
+          <div class="field" data-field="iterations" data-target="cli">
+            <label for="field-iterations">Iterations</label>
+            <input type="number" id="field-iterations" min="1">
+          </div>
+          <div class="field" data-field="OPENAI_API_KEY" data-target="env" data-sensitive="true">
+            <label for="field-OPENAI_API_KEY">OpenAI API Key</label>
+            <input type="password" id="field-OPENAI_API_KEY" autocomplete="off">
+            <small class="secret-note" data-secret-note></small>
+          </div>
+          <div class="field" data-field="TARGET_REPO_PATH" data-target="env">
+            <label for="field-TARGET_REPO_PATH">Target Repository Path</label>
+            <input type="text" id="field-TARGET_REPO_PATH">
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <h2>Pipeline Flags</h2>
+        </div>
+        <div class="grid two-col">
+          <div class="field switch" data-field="demo" data-target="cli" data-type="boolean">
+            <label for="field-demo">Demo Mode</label>
+            <input type="checkbox" id="field-demo">
+          </div>
+          <div class="field" data-field="artifacts_dir" data-target="cli">
+            <label for="field-artifacts_dir">Artifacts Directory</label>
+            <input type="text" id="field-artifacts_dir" placeholder="leave blank for default">
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <h2>Screenshot Service</h2>
+        </div>
+        <div class="grid two-col">
+          <div class="field" data-field="FRONTEND_SCREENSHOT_URL" data-target="env">
+            <label for="field-FRONTEND_SCREENSHOT_URL">Target URL</label>
+            <input type="text" id="field-FRONTEND_SCREENSHOT_URL">
+          </div>
+          <div class="field" data-field="FRONTEND_SCREENSHOT_VIEWPORT_WIDTH" data-target="env">
+            <label for="field-FRONTEND_SCREENSHOT_VIEWPORT_WIDTH">Viewport Width</label>
+            <input type="number" id="field-FRONTEND_SCREENSHOT_VIEWPORT_WIDTH">
+          </div>
+          <div class="field" data-field="FRONTEND_SCREENSHOT_VIEWPORT_HEIGHT" data-target="env">
+            <label for="field-FRONTEND_SCREENSHOT_VIEWPORT_HEIGHT">Viewport Height</label>
+            <input type="number" id="field-FRONTEND_SCREENSHOT_VIEWPORT_HEIGHT">
+          </div>
+          <div class="field" data-field="FRONTEND_SCREENSHOT_SCROLL_DELAY_MS" data-target="env">
+            <label for="field-FRONTEND_SCREENSHOT_SCROLL_DELAY_MS">Scroll Delay (ms)</label>
+            <input type="number" id="field-FRONTEND_SCREENSHOT_SCROLL_DELAY_MS">
+          </div>
+          <div class="field" data-field="FRONTEND_SCREENSHOT_MAX_CAPTURES" data-target="env">
+            <label for="field-FRONTEND_SCREENSHOT_MAX_CAPTURES">Max Captures</label>
+            <input type="number" id="field-FRONTEND_SCREENSHOT_MAX_CAPTURES">
+          </div>
+          <div class="field" data-field="FRONTEND_SCREENSHOT_NAV_TIMEOUT_MS" data-target="env">
+            <label for="field-FRONTEND_SCREENSHOT_NAV_TIMEOUT_MS">Navigation Timeout (ms)</label>
+            <input type="number" id="field-FRONTEND_SCREENSHOT_NAV_TIMEOUT_MS">
+          </div>
+          <div class="field" data-field="FRONTEND_SCREENSHOT_OUTPUT_DIR" data-target="env">
+            <label for="field-FRONTEND_SCREENSHOT_OUTPUT_DIR">Output Directory</label>
+            <input type="text" id="field-FRONTEND_SCREENSHOT_OUTPUT_DIR">
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <h2>Feedback Service</h2>
+        </div>
+        <div class="grid two-col">
+          <div class="field" data-field="UI_FEEDBACK_MAX_OUTPUT_TOKENS" data-target="env">
+            <label for="field-UI_FEEDBACK_MAX_OUTPUT_TOKENS">Max Output Tokens</label>
+            <input type="number" id="field-UI_FEEDBACK_MAX_OUTPUT_TOKENS">
+          </div>
+          <div class="field" data-field="UI_FEEDBACK_HTTP_TIMEOUT" data-target="env">
+            <label for="field-UI_FEEDBACK_HTTP_TIMEOUT">HTTP Timeout (s)</label>
+            <input type="number" id="field-UI_FEEDBACK_HTTP_TIMEOUT" step="1">
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <h2>Router & Host Bridge</h2>
+        </div>
+        <div class="grid">
+          <div class="field" data-field="FRONTEND_ENHANCEMENT_HOST_TIMEOUT" data-target="env">
+            <label for="field-FRONTEND_ENHANCEMENT_HOST_TIMEOUT">Host Timeout (s)</label>
+            <input type="number" id="field-FRONTEND_ENHANCEMENT_HOST_TIMEOUT">
+          </div>
+          <div class="field" data-field="ROUTER_MAX_CONCURRENCY" data-target="env">
+            <label for="field-ROUTER_MAX_CONCURRENCY">Router Concurrency</label>
+            <input type="number" id="field-ROUTER_MAX_CONCURRENCY">
+          </div>
+          <div class="field" data-field="FRONTEND_ENHANCEMENT_BRIDGE_URL" data-target="env">
+            <label for="field-FRONTEND_ENHANCEMENT_BRIDGE_URL">Bridge URL</label>
+            <input type="text" id="field-FRONTEND_ENHANCEMENT_BRIDGE_URL">
+          </div>
+          <div class="field" data-field="FRONTEND_ENHANCEMENT_ROUTER_URL" data-target="env">
+            <label for="field-FRONTEND_ENHANCEMENT_ROUTER_URL">Router URL</label>
+            <input type="text" id="field-FRONTEND_ENHANCEMENT_ROUTER_URL">
+          </div>
+          <div class="field" data-field="FRONTEND_ENHANCEMENT_CODEX_LOG_DIR" data-target="env">
+            <label for="field-FRONTEND_ENHANCEMENT_CODEX_LOG_DIR">Codex Log Directory</label>
+            <input type="text" id="field-FRONTEND_ENHANCEMENT_CODEX_LOG_DIR">
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <h2>Pipeline & Retries</h2>
+        </div>
+        <div class="grid">
+          <div class="field" data-field="PIPELINE_REQUEST_TIMEOUT" data-target="env">
+            <label for="field-PIPELINE_REQUEST_TIMEOUT">Request Timeout (s)</label>
+            <input type="number" id="field-PIPELINE_REQUEST_TIMEOUT">
+          </div>
+          <div class="field" data-field="PIPELINE_MAX_ATTEMPTS" data-target="env">
+            <label for="field-PIPELINE_MAX_ATTEMPTS">Max Attempts</label>
+            <input type="number" id="field-PIPELINE_MAX_ATTEMPTS">
+          </div>
+          <div class="field" data-field="PIPELINE_RETRY_BACKOFF" data-target="env">
+            <label for="field-PIPELINE_RETRY_BACKOFF">Retry Backoff (s)</label>
+            <input type="number" step="0.5" id="field-PIPELINE_RETRY_BACKOFF">
+          </div>
+          <div class="field" data-field="PIPELINE_ARTIFACT_ROOT" data-target="env">
+            <label for="field-PIPELINE_ARTIFACT_ROOT">Artifact Root</label>
+            <input type="text" id="field-PIPELINE_ARTIFACT_ROOT">
+          </div>
+          <div class="field full" data-field="PIPELINE_SAMPLE_FEEDBACK" data-target="env">
+            <label for="field-PIPELINE_SAMPLE_FEEDBACK">Sample Feedback</label>
+            <p class="hint">Text sent when running the sample-feedback helper.</p>
+            <textarea id="field-PIPELINE_SAMPLE_FEEDBACK"></textarea>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-header">
+          <h2>Service Endpoints</h2>
+        </div>
+        <div class="grid two-col">
+          <div class="field" data-field="FRONTEND_SCREENSHOTS_URL" data-target="env">
+            <label for="field-FRONTEND_SCREENSHOTS_URL">Screenshot Endpoint</label>
+            <input type="text" id="field-FRONTEND_SCREENSHOTS_URL">
+          </div>
+          <div class="field" data-field="UI_FEEDBACK_SERVICE_URL" data-target="env">
+            <label for="field-UI_FEEDBACK_SERVICE_URL">Feedback Endpoint</label>
+            <input type="text" id="field-UI_FEEDBACK_SERVICE_URL">
+          </div>
+        </div>
+      </section>
+    </form>
+  </main>
+  <script type="module" src="/config-ui.js"></script>
+</body>
+</html>

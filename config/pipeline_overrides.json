@@ -1,0 +1,7 @@
+{
+  "artifacts_dir": null,
+  "demo": false,
+  "iterations": 1,
+  "model": "gpt-5.1-codex-mini",
+  "model_reasoning_effort": "low"
+}

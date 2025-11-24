@@ -1,0 +1,477 @@
+{
+  "version": 1,
+  "updated": "2025-11-18T00:00:00Z",
+  "groups": [
+    {
+      "id": "primary",
+      "label": "Primary Controls",
+      "description": "High-sensitivity inputs that directly shape Codex feedback and host execution",
+      "default_expanded": true
+    },
+    {
+      "id": "pipeline_flags",
+      "label": "Pipeline Flags",
+      "description": "CLI overrides applied when running enhancement_cli",
+      "default_expanded": false
+    },
+    {
+      "id": "screenshot",
+      "label": "Screenshot Service",
+      "description": "Headless browser capture configuration",
+      "default_expanded": false
+    },
+    {
+      "id": "feedback",
+      "label": "Feedback Service",
+      "description": "OpenAI feedback worker configuration",
+      "default_expanded": false
+    },
+    {
+      "id": "router_host",
+      "label": "Router & Host Bridge",
+      "description": "Controls for Codex routing and bridge behavior",
+      "default_expanded": false
+    },
+    {
+      "id": "pipeline",
+      "label": "Pipeline & Retries",
+      "description": "Retry behavior, artifacts, and canned samples",
+      "default_expanded": false
+    },
+    {
+      "id": "endpoints",
+      "label": "Service Endpoints",
+      "description": "Internal HTTP endpoints for the orchestrator CLI",
+      "default_expanded": false
+    }
+  ],
+  "fields": [
+    {
+      "key": "UI_FEEDBACK_PROMPT",
+      "label": "Prompt",
+      "target": "env",
+      "group": "primary",
+      "control": "textarea",
+      "sensitive": false,
+      "required": true,
+      "services": ["feedback_service"],
+      "validation": {
+        "minLength": 32,
+        "maxLength": 6000
+      },
+      "help": "System prompt for the feedback Responses API",
+      "default_source": "env_example"
+    },
+    {
+      "key": "model_reasoning_effort",
+      "label": "Reasoning Effort",
+      "target": "cli",
+      "group": "primary",
+      "control": "radio",
+      "sensitive": false,
+      "required": false,
+      "services": ["orchestrator_cli"],
+      "options": [
+        {"value": "low", "label": "Low"},
+        {"value": "medium", "label": "Medium"},
+        {"value": "high", "label": "High"}
+      ],
+      "help": "Default reasoning effort passed to Codex",
+      "default": null,
+      "cli_flag": "--model-reasoning-effort"
+    },
+    {
+      "key": "FRONTEND_ENHANCEMENT_CODEX_BIN",
+      "label": "Codex Binary",
+      "target": "env",
+      "group": "primary",
+      "control": "path",
+      "path_mode": "file",
+      "sensitive": false,
+      "required": true,
+      "services": ["router_service", "host_bridge"],
+      "help": "Absolute path to the Codex executable",
+      "default_source": "env_example"
+    },
+    {
+      "key": "iterations",
+      "label": "Iterations",
+      "target": "cli",
+      "group": "primary",
+      "control": "number",
+      "sensitive": false,
+      "required": true,
+      "services": ["orchestrator_cli"],
+      "validation": {
+        "min": 1,
+        "step": 1
+      },
+      "default": 1,
+      "cli_flag": "--iterations"
+    },
+    {
+      "key": "UI_FEEDBACK_MODEL_NAME",
+      "label": "Feedback Model",
+      "target": "env",
+      "group": "primary",
+      "control": "select",
+      "sensitive": false,
+      "required": true,
+      "services": ["feedback_service"],
+      "options": [
+        {"value": "gpt-4o-mini", "label": "gpt-4o-mini"},
+        {"value": "gpt-4o", "label": "gpt-4o"},
+        {"value": "gpt-4.1-mini", "label": "gpt-4.1-mini"},
+        {"value": "gpt-4.1", "label": "gpt-4.1"},
+        {"value": "gpt-5.1", "label": "gpt-5.1"}
+      ],
+      "help": "Responses API model identifier",
+      "default_source": "env_example"
+    },
+    {
+      "key": "CODEX_INSTRUCTION_PREFIX",
+      "label": "Codex Instruction Prefix",
+      "target": "env",
+      "group": "primary",
+      "control": "textarea",
+      "sensitive": false,
+      "required": true,
+      "services": ["router_service", "host_bridge"],
+      "validation": {
+        "minLength": 8,
+        "maxLength": 2000
+      },
+      "help": "Instruction prefix prepended to Codex prompts",
+      "default_source": "env_example"
+    },
+    {
+      "key": "TARGET_REPO_PATH",
+      "label": "Target Repository Path",
+      "target": "env",
+      "group": "primary",
+      "control": "path",
+      "path_mode": "directory",
+      "sensitive": false,
+      "required": true,
+      "services": ["router_service", "host_bridge"],
+      "help": "Directory Codex edits when applying feedback",
+      "default_source": "env_example"
+    },
+    {
+      "key": "model",
+      "label": "Model Override",
+      "target": "cli",
+      "group": "primary",
+      "control": "text",
+      "sensitive": false,
+      "required": false,
+      "services": ["orchestrator_cli"],
+      "help": "Default Codex model passed via --model",
+      "default": null,
+      "cli_flag": "--model"
+    },
+    {
+      "key": "OPENAI_API_KEY",
+      "label": "OpenAI API Key",
+      "target": "env",
+      "group": "primary",
+      "control": "password",
+      "sensitive": true,
+      "required": true,
+      "services": ["feedback_service"],
+      "help": "Responses API key (never logged)",
+      "default_source": "env_example"
+    },
+    {
+      "key": "UI_FEEDBACK_SCHEMA_PATH",
+      "label": "Schema Path",
+      "target": "env",
+      "group": "primary",
+      "control": "path",
+      "path_mode": "file",
+      "sensitive": false,
+      "required": true,
+      "services": ["feedback_service"],
+      "help": "Structured output schema consumed by OpenAI",
+      "default_source": "env_example"
+    },
+    {
+      "key": "demo",
+      "label": "Demo Mode",
+      "target": "cli",
+      "group": "pipeline_flags",
+      "control": "toggle",
+      "sensitive": false,
+      "required": false,
+      "services": ["orchestrator_cli"],
+      "help": "Label pipeline artifacts as demo runs",
+      "default": false,
+      "cli_flag": "--demo"
+    },
+    {
+      "key": "artifacts_dir",
+      "label": "Artifacts Directory",
+      "target": "cli",
+      "group": "pipeline_flags",
+      "control": "path",
+      "path_mode": "directory",
+      "sensitive": false,
+      "required": false,
+      "services": ["orchestrator_cli"],
+      "help": "Override directory for pipeline artifacts",
+      "default": null,
+      "cli_flag": "--artifacts-dir"
+    },
+    {
+      "key": "FRONTEND_SCREENSHOT_URL",
+      "label": "Target URL",
+      "target": "env",
+      "group": "screenshot",
+      "control": "text",
+      "sensitive": false,
+      "required": true,
+      "services": ["screenshot_service"],
+      "help": "Absolute URL loaded by the screenshot worker",
+      "default_source": "env_example"
+    },
+    {
+      "key": "FRONTEND_SCREENSHOT_VIEWPORT_WIDTH",
+      "label": "Viewport Width",
+      "target": "env",
+      "group": "screenshot",
+      "control": "number",
+      "sensitive": false,
+      "required": true,
+      "services": ["screenshot_service"],
+      "validation": {"min": 320, "max": 5120, "step": 10},
+      "default_source": "env_example"
+    },
+    {
+      "key": "FRONTEND_SCREENSHOT_VIEWPORT_HEIGHT",
+      "label": "Viewport Height",
+      "target": "env",
+      "group": "screenshot",
+      "control": "number",
+      "sensitive": false,
+      "required": true,
+      "services": ["screenshot_service"],
+      "validation": {"min": 320, "max": 4320, "step": 10},
+      "default_source": "env_example"
+    },
+    {
+      "key": "FRONTEND_SCREENSHOT_SCROLL_DELAY_MS",
+      "label": "Scroll Delay (ms)",
+      "target": "env",
+      "group": "screenshot",
+      "control": "number",
+      "sensitive": false,
+      "required": true,
+      "services": ["screenshot_service"],
+      "validation": {"min": 100, "max": 2000, "step": 50},
+      "default_source": "env_example"
+    },
+    {
+      "key": "FRONTEND_SCREENSHOT_MAX_CAPTURES",
+      "label": "Max Captures",
+      "target": "env",
+      "group": "screenshot",
+      "control": "number",
+      "sensitive": false,
+      "required": true,
+      "services": ["screenshot_service"],
+      "validation": {"min": 1, "max": 250, "step": 1},
+      "default_source": "env_example"
+    },
+    {
+      "key": "FRONTEND_SCREENSHOT_NAV_TIMEOUT_MS",
+      "label": "Navigation Timeout (ms)",
+      "target": "env",
+      "group": "screenshot",
+      "control": "number",
+      "sensitive": false,
+      "required": true,
+      "services": ["screenshot_service"],
+      "validation": {"min": 1000, "max": 120000, "step": 500},
+      "default_source": "env_example"
+    },
+    {
+      "key": "FRONTEND_SCREENSHOT_OUTPUT_DIR",
+      "label": "Screenshot Output Directory",
+      "target": "env",
+      "group": "screenshot",
+      "control": "path",
+      "path_mode": "directory",
+      "sensitive": false,
+      "required": true,
+      "services": ["screenshot_service"],
+      "default_source": "env_example"
+    },
+    {
+      "key": "UI_FEEDBACK_MAX_OUTPUT_TOKENS",
+      "label": "Max Output Tokens",
+      "target": "env",
+      "group": "feedback",
+      "control": "number",
+      "sensitive": false,
+      "required": true,
+      "services": ["feedback_service"],
+      "validation": {"min": 256, "max": 4096, "step": 16},
+      "default_source": "env_example"
+    },
+    {
+      "key": "UI_FEEDBACK_HTTP_TIMEOUT",
+      "label": "Feedback HTTP Timeout",
+      "target": "env",
+      "group": "feedback",
+      "control": "number",
+      "sensitive": false,
+      "required": true,
+      "services": ["feedback_service"],
+      "validation": {"min": 30, "max": 600, "step": 5},
+      "default_source": "env_example"
+    },
+    {
+      "key": "FRONTEND_ENHANCEMENT_HOST_TIMEOUT",
+      "label": "Host Timeout",
+      "target": "env",
+      "group": "router_host",
+      "control": "number",
+      "sensitive": false,
+      "required": true,
+      "services": ["router_service", "host_bridge"],
+      "validation": {"min": 60, "max": 7200, "step": 30},
+      "help": "Seconds router waits for the host bridge and Codex before aborting (also caps Codex exec time).",
+      "default_source": "env_example"
+    },
+    {
+      "key": "ROUTER_MAX_CONCURRENCY",
+      "label": "Router Concurrency",
+      "target": "env",
+      "group": "router_host",
+      "control": "number",
+      "sensitive": false,
+      "required": true,
+      "services": ["router_service"],
+      "validation": {"min": 1, "max": 16, "step": 1},
+      "default_source": "env_example"
+    },
+    {
+      "key": "FRONTEND_ENHANCEMENT_BRIDGE_URL",
+      "label": "Bridge URL",
+      "target": "env",
+      "group": "router_host",
+      "control": "text",
+      "sensitive": false,
+      "required": true,
+      "services": ["router_service", "host_bridge"],
+      "help": "HTTP endpoint for the host bridge",
+      "default_source": "env_example"
+    },
+    {
+      "key": "FRONTEND_ENHANCEMENT_ROUTER_URL",
+      "label": "Router URL",
+      "target": "env",
+      "group": "router_host",
+      "control": "text",
+      "sensitive": false,
+      "required": true,
+      "services": ["router_service"],
+      "help": "Endpoint hit by the CLI router step",
+      "default_source": "env_example"
+    },
+    {
+      "key": "FRONTEND_ENHANCEMENT_CODEX_LOG_DIR",
+      "label": "Codex Log Directory",
+      "target": "env",
+      "group": "router_host",
+      "control": "path",
+      "path_mode": "directory",
+      "sensitive": false,
+      "required": true,
+      "services": ["router_service", "host_bridge"],
+      "default_source": "env_example"
+    },
+    {
+      "key": "PIPELINE_REQUEST_TIMEOUT",
+      "label": "Pipeline Request Timeout",
+      "target": "env",
+      "group": "pipeline",
+      "control": "number",
+      "sensitive": false,
+      "required": true,
+      "services": ["orchestrator_cli"],
+      "validation": {"min": 60, "max": 3600, "step": 5},
+      "default_source": "env_example"
+    },
+    {
+      "key": "PIPELINE_MAX_ATTEMPTS",
+      "label": "Max Attempts",
+      "target": "env",
+      "group": "pipeline",
+      "control": "number",
+      "sensitive": false,
+      "required": true,
+      "services": ["orchestrator_cli"],
+      "validation": {"min": 1, "max": 10, "step": 1},
+      "default_source": "env_example"
+    },
+    {
+      "key": "PIPELINE_RETRY_BACKOFF",
+      "label": "Retry Backoff (s)",
+      "target": "env",
+      "group": "pipeline",
+      "control": "number",
+      "sensitive": false,
+      "required": true,
+      "services": ["orchestrator_cli"],
+      "validation": {"min": 0.5, "max": 120, "step": 0.5},
+      "default_source": "env_example"
+    },
+    {
+      "key": "PIPELINE_SAMPLE_FEEDBACK",
+      "label": "Sample Feedback",
+      "target": "env",
+      "group": "pipeline",
+      "control": "textarea",
+      "sensitive": false,
+      "required": true,
+      "services": ["orchestrator_cli"],
+      "validation": {"minLength": 4, "maxLength": 1000},
+      "default_source": "env_example"
+    },
+    {
+      "key": "PIPELINE_ARTIFACT_ROOT",
+      "label": "Artifact Root",
+      "target": "env",
+      "group": "pipeline",
+      "control": "path",
+      "path_mode": "directory",
+      "sensitive": false,
+      "required": true,
+      "services": ["orchestrator_cli"],
+      "default_source": "env_example"
+    },
+    {
+      "key": "FRONTEND_SCREENSHOTS_URL",
+      "label": "Screenshot Endpoint",
+      "target": "env",
+      "group": "endpoints",
+      "control": "text",
+      "sensitive": false,
+      "required": true,
+      "services": ["orchestrator_cli"],
+      "default_source": "env_example"
+    },
+    {
+      "key": "UI_FEEDBACK_SERVICE_URL",
+      "label": "Feedback Endpoint",
+      "target": "env",
+      "group": "endpoints",
+      "control": "text",
+      "sensitive": false,
+      "required": true,
+      "services": ["orchestrator_cli"],
+      "default_source": "env_example"
+    }
+  ]
+}

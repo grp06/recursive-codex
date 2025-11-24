@@ -1,0 +1,11 @@
+{
+  "type": "object",
+  "properties": {
+    "feedback": {
+      "type": "string",
+      "description": "Concise, constructive UI/UX feedback with specific recommended changes."
+    }
+  },
+  "required": ["feedback"],
+  "additionalProperties": false
+}

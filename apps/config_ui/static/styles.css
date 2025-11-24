@@ -1,0 +1,233 @@
+:root {
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  color: #0f172a;
+  background: #f5f7fb;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #f5f7fb;
+  color: #0f172a;
+}
+
+.page {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 32px 20px 60px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.page-header h1 {
+  margin: 0 0 6px;
+}
+
+.page-header p {
+  margin: 0;
+  color: #475569;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+button,
+label.upload {
+  border: none;
+  border-radius: 6px;
+  padding: 10px 16px;
+  font-size: 14px;
+  cursor: pointer;
+  background: #2563eb;
+  color: #fff;
+}
+
+button.secondary,
+label.upload.secondary,
+label.upload {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+label.upload input {
+  display: none;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.status-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: #fff;
+  border-radius: 10px;
+  padding: 16px;
+  border: 1px solid #dbe1f0;
+}
+
+#status {
+  font-weight: 600;
+}
+
+#message {
+  min-height: 20px;
+  color: #b91c1c;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.card {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #dbe1f0;
+  padding: 20px;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.05);
+}
+
+.card-header {
+  margin-bottom: 16px;
+}
+
+.card-header h2 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.grid {
+  display: grid;
+  gap: 16px;
+}
+
+.grid.two-col {
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.grid.three-col {
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.field.full {
+  grid-column: 1 / -1;
+}
+
+.field label {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.field .hint {
+  margin: 0;
+  font-size: 12px;
+  color: #64748b;
+}
+
+.field input,
+.field textarea,
+.field select {
+  border: 1px solid #cbd5f5;
+  border-radius: 6px;
+  padding: 10px;
+  font-size: 14px;
+  width: 100%;
+}
+
+.field.error input,
+.field.error textarea,
+.field.error select {
+  border-color: #b91c1c;
+}
+
+.field.error .radio-group label {
+  border-color: #b91c1c;
+}
+
+.field .error-message {
+  color: #b91c1c;
+  font-size: 13px;
+  font-weight: 500;
+  margin-top: 6px;
+  display: none;
+  padding: 4px 8px;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 4px;
+  line-height: 1.4;
+}
+
+.field.error .error-message {
+  display: block;
+}
+
+.field textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.field.switch {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.field.switch label {
+  margin-right: 8px;
+}
+
+.radio-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.radio-group label {
+  font-weight: 400;
+  border: 1px solid #cbd5f5;
+  border-radius: 4px;
+  padding: 6px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.secret-note {
+  font-size: 12px;
+  color: #64748b;
+}
+
+@media (max-width: 640px) {
+  .field.switch {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .actions {
+    width: 100%;
+    flex-direction: column;
+  }
+}

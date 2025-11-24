@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>recursive-codex</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main>
+    <h1>recursive-codex</h1>
+    <p class="lead">An open-source toolkit that automatically improves landing pages by capturing screenshots, generating AI feedback, and applying changes through Codex CLI. Run it iteratively to continuously refine your UI.</p>
+    
+    <section>
+      <h2>How it works</h2>
+      <p>The pipeline runs three steps in sequence:</p>
+      <ol>
+        <li><strong>Capture screenshots</strong> – Playwright captures full-page screenshots of your landing page</li>
+        <li><strong>Generate feedback</strong> – OpenAI Responses API analyzes the UI and provides actionable feedback on design, layout, and content</li>
+        <li><strong>Apply changes</strong> – Codex CLI automatically applies improvements to your codebase</li>
+      </ol>
+      <p>Run multiple iterations to build on previous improvements. Each run captures a fresh screenshot, analyzes the current state, and applies the next set of enhancements.</p>
+    </section>
+
+    <section>
+      <h2>Key features</h2>
+      <ul>
+        <li><strong>Single CLI command</strong> – Run the entire pipeline with <code>uv run enhancement_cli pipeline run</code></li>
+        <li><strong>Containerized services</strong> – Screenshot, feedback, and router services run in Docker</li>
+        <li><strong>Host bridge</strong> – Codex runs on your host machine to directly edit your frontend repo</li>
+        <li><strong>Config UI</strong> – Browser-based interface at <code>localhost:8110</code> to manage settings</li>
+        <li><strong>Iterative improvements</strong> – Use <code>--iterations</code> flag to run multiple passes</li>
+        <li><strong>Complete logging</strong> – All runs logged to <code>run_logs/codex_runs/</code> and <code>run_logs/pipeline_runs/</code></li>
+        <li><strong>Schema-driven configuration</strong> – Type-safe settings with validation</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Architecture</h2>
+      <p>recursive-codex uses a microservices architecture with four main components:</p>
+      <ul>
+        <li><strong>Screenshot service</strong> – Runs Playwright in Docker, stitches scrolling captures, returns PNG + metadata</li>
+        <li><strong>Feedback service</strong> – Calls OpenAI Responses API with structured prompts, returns critique JSON</li>
+        <li><strong>Router service</strong> – Validates feedback, fans out to host bridge concurrently</li>
+        <li><strong>Host bridge</strong> – Executes Codex CLI commands on your machine, stores logs</li>
+      </ul>
+      <p>The orchestrator CLI coordinates all services and handles retries. Shared logic lives in <code>packages/enhancement_core</code>.</p>
+    </section>
+
+    <section>
+      <h2>Use cases</h2>
+      <ul>
+        <li>Continuously improve landing page design and conversion</li>
+        <li>Automate UI refinement based on AI feedback</li>
+        <li>Iterate on design improvements without manual coding</li>
+        <li>Test different design approaches through multiple pipeline runs</li>
+        <li>Maintain consistent UI quality across iterations</li>
+      </ul>
+    </section>
+
+    <section>
+      <h2>Documentation</h2>
+      <ul>
+        <li><a href="../docs/getting-started.md">Getting Started</a> – Step-by-step onboarding</li>
+        <li><a href="../docs/architecture.md">Architecture</a> – System design and data flow</li>
+        <li><a href="../docs/contributing.md">Contributing</a> – Development workflow</li>
+        <li><a href="../docs/troubleshooting.md">Troubleshooting</a> – Common issues and fixes</li>
+      </ul>
+    </section>
+
+    <section class="cta">
+      <p><a href="https://github.com">View on GitHub</a> | <a href="../README.md">Read the README</a></p>
+    </section>
+  </main>
+
+  <footer>
+    <p>© 2025 recursive-codex · Open source · MIT License</p>
+  </footer>
+</body>
+</html>
+

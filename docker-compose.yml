@@ -1,0 +1,119 @@
+services:
+  screenshot_service:
+    build:
+      context: ./apps/screenshot_service
+      dockerfile: Dockerfile
+      args:
+        PLAYWRIGHT_IMAGE: mcr.microsoft.com/playwright/python:v1.55.0-jammy
+      additional_contexts:
+        root: .
+        packages: ./packages
+    env_file:
+      - .env
+    environment:
+      FRONTEND_SCREENSHOT_OUTPUT_DIR: /screenshots
+      WATCHFILES_FORCE_POLLING: "true"
+    ports:
+      - "${FRONTEND_SCREENSHOTS_PORT:-8101}:8000"
+    volumes:
+      - ./screenshots:/screenshots
+      - ./apps/screenshot_service:/app/apps/screenshot_service:ro
+      - ./packages:/app/packages:ro
+    command:
+      - uvicorn
+      - apps.screenshot_service.app:app
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8000"
+      - --reload
+
+  feedback_service:
+    build:
+      context: ./apps/feedback_service
+      dockerfile: Dockerfile
+      args:
+        PYTHON_IMAGE: python:3.11-slim
+      additional_contexts:
+        root: .
+        packages: ./packages
+    env_file:
+      - .env
+    environment:
+      WATCHFILES_FORCE_POLLING: "true"
+    depends_on:
+      - screenshot_service
+    ports:
+      - "${UI_FEEDBACK_PORT:-8102}:8000"
+    volumes:
+      - ./apps/feedback_service:/app/apps/feedback_service:ro
+      - ./packages:/app/packages:ro
+    command:
+      - uvicorn
+      - apps.feedback_service.app:app
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8000"
+      - --reload
+
+  router_service:
+    build:
+      context: ./apps/router_service
+      dockerfile: Dockerfile
+      args:
+        PYTHON_IMAGE: python:3.11-slim
+      additional_contexts:
+        root: .
+        packages: ./packages
+    env_file:
+      - .env
+    environment:
+      WATCHFILES_FORCE_POLLING: "true"
+    depends_on:
+      - feedback_service
+    ports:
+      - "${FRONTEND_ENHANCEMENT_PORT:-8103}:8000"
+    volumes:
+      - ./apps/router_service:/app/apps/router_service:ro
+      - ./packages:/app/packages:ro
+    command:
+      - uvicorn
+      - apps.router_service.app:app
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8000"
+      - --reload
+
+  config_ui:
+    build:
+      context: ./apps/config_ui
+      dockerfile: Dockerfile
+      args:
+        PYTHON_IMAGE: python:3.11-slim
+      additional_contexts:
+        root: .
+        packages: ./packages
+    env_file:
+      - .env
+    depends_on:
+      - router_service
+    ports:
+      - "${CONFIG_UI_PORT:-8110}:8000"
+    volumes:
+      - ./.env:/app/.env
+      - ./config:/app/config
+      - ./.env.example:/app/.env.example
+      - ./apps/config_ui:/app/apps/config_ui:ro
+      - ./packages:/app/packages:ro
+    environment:
+      WATCHFILES_FORCE_POLLING: "true"
+    command:
+      - uvicorn
+      - apps.config_ui.app:app
+      - --host
+      - 0.0.0.0
+      - --port
+      - "8000"
+      - --reload
